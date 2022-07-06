@@ -93,6 +93,10 @@ dialog {
     font-size: large;
 }
 
+dialog::backdrop {
+    background-color: #FF5EF7;;
+}
+
 
 dialog > form {
     display: flex;

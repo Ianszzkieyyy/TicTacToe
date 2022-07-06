@@ -17,6 +17,9 @@ AI is for later
 */
 const InitializeForm = (() => {
     const form = document.querySelector("form");
+    const dialog = document.querySelector("dialog");
+
+    dialog.showModal();
 
     form.addEventListener("submit", () => {
         let player = document.querySelector('input[name="player"]:checked').value;
