@@ -36,10 +36,6 @@
     <dialog open>
         <form action="" method="dialog">
             <h2>Welcome to Tic Tac Toe!</h2>
-            <div class="form-name">
-                <Label for="name"><h3>What is Your Name?</h3></Label>
-                <input type="name" name="name" id="name" max="20" required>
-            </div>
             <div class="form-player">
                 <h3>Choose Your Player</h3>
                 <div>
@@ -47,12 +43,16 @@
                     <input type="radio" name="player" id="x" value="x" required>
                 </div>
                 <div>
-                    <Label for="x">Player O</Label>
+                    <Label for="o">Player O</Label>
                     <input type="radio" name="player" id="o" value="o" required>
                 </div>
             </div>
             <div class="form-diff">
-                <h3>Choose Your Difficulty</h3>
+                <h3>Choose Your Enemy</h3>
+                <div>
+                    <label for="user">User</label>
+                    <input type="radio" name="difficulty" id="user" value="user" required>
+                </div>
                 <div>
                     <label for="easy">Easy</label>
                     <input type="radio" name="difficulty" id="easy" value="easy" required>
