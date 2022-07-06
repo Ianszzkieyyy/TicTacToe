@@ -1,0 +1,135 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+    margin-top: -50px;
+    font-family: 'Lato', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    background-color: #FF5EF7;
+    color: white;
+}
+
+h1 {
+    font-size: 64px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.interface {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.player-int {
+    font-size: 18px;
+    padding: 16px 32px;
+    border: 3px solid white;
+    border-radius: 32px;
+}
+
+.interface > button {
+    font-size: 18px;
+    color: #4d114a;
+    padding: 16px 32px;
+    border: none;
+    border-radius: 32px;
+    transition: 0.125s;
+}
+
+.interface > button:hover {
+    background-color: #d3bfd2;
+    transform: scale(1.125);
+}
+
+
+.playing-area {
+    display: grid;
+    width: 400px;
+    height: 400px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.playing-area > div {
+    background-color: #4d114a;
+    border: 2px solid #8a2585;
+    font-size: 92px;
+    text-align: center;
+}
+
+.playing-area > [data-cell="1"] {
+    border-top-left-radius: 32px;
+}
+.playing-area > [data-cell="3"] {
+    border-top-right-radius: 32px;
+}
+.playing-area > [data-cell="7"] {
+    border-bottom-left-radius: 32px;
+}
+.playing-area > [data-cell="9"] {
+    border-bottom-right-radius: 32px;
+}
+
+dialog {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    padding: 30px;
+    border-radius: 20px;
+    border: none;
+
+    font-size: large;
+}
+
+dialog > form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+form > div {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#name {
+    padding: 8px;
+    border: 2px solid #4d114a;
+    border-radius: 16px;
+    color: #4d114a;
+    text-align: center;
+    font-size: 18px;
+}
+
+#form-submit {
+    background-color: #4d114a;
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 16px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#form-submit:hover {
+    background-color: #8a2585;
+}
+
+
