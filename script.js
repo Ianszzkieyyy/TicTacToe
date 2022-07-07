@@ -31,13 +31,51 @@ const InitializeForm = (() => {
 })();
 
 const SetGame = (player, enemy, difficulty) => {
-    return {player, enemy, difficulty};
+    const playerInt = document.querySelector(".player-int");
+    playerInt.textContent = player === "x" ? "Player: X" : "Player: O";
+
+    const playerUser = PlayerFactory(player, true, difficulty);
+    const playerEnemy = PlayerFactory(enemy, false, difficulty);
+
+    return {playerUser, playerEnemy};
 }
 
 const GameBoard = (() => {
-    const gameBoard = Array.from(document.querySelectorAll(".playing-area > [data-cell]"));
+    const gameBoard = Array.from(document.querySelectorAll(".playing-area > div"));
+
+    const winningBoard = [
+        [0,1,2],
+        [3,4,5],
+        [6,7,8],
+        [0,3,6],
+        [1,4,7],
+        [2,5,8],
+        [0,4,8],
+        [2,4,6],
+    ]
+
+    const checkForWinner = (class_of_player) => {
+        const playerSelection = Array.from(document.querySelector(`.${class_of_player}`));  
+    }
+
+    return{checkForWinner, gameBoard}
     
 })();
+
+const PlayerFactory = (player, is_user, difficulty) => {
+    const gameBoard = GameBoard.gameBoard;
+
+    
+
+    // gameBoard.forEach((cell) => {
+    //     cell.addEventListener("click", e => {
+    //         console.log(`${e.target.id} has been clicked`);
+    //         cell.textContent = player
+    //     })
+    // })
+}
+
+
 
 
 
