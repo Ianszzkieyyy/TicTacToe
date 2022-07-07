@@ -22,19 +22,19 @@ const InitializeForm = (() => {
     dialog.showModal();
 
     form.addEventListener("submit", () => {
-        let player = document.querySelector('input[name="player"]:checked').value;
+        let user = document.querySelector('input[name="player"]:checked').value;
         let enemy = document.querySelector('input[name="player"]:not(:checked)').value;
         let difficulty = document.querySelector('input[name="difficulty"]:checked').value;
 
-        SetGame(player, enemy, difficulty);
+        SetGame(user, enemy, difficulty);
     })
 })();
 
-const SetGame = (player, enemy, difficulty) => {
+const SetGame = (user, enemy, difficulty) => {
     const playerInt = document.querySelector(".player-int");
-    playerInt.textContent = player === "x" ? "Player: X" : "Player: O";
+    playerInt.textContent = user === "x" ? "Player: X" : "Player: O";
 
-    const playerUser = PlayerFactory(player, true, difficulty);
+    const playerUser = PlayerFactory(user, true, difficulty);
     const playerEnemy = PlayerFactory(enemy, false, difficulty);
 
     return {playerUser, playerEnemy};
@@ -64,15 +64,41 @@ const GameBoard = (() => {
 
 const PlayerFactory = (player, is_user, difficulty) => {
     const gameBoard = GameBoard.gameBoard;
+    let userTurn = true;
 
-    
 
-    // gameBoard.forEach((cell) => {
-    //     cell.addEventListener("click", e => {
-    //         console.log(`${e.target.id} has been clicked`);
-    //         cell.textContent = player
-    //     })
-    // })
+    const moveUser = (event) => {
+        if (userTurn == true) {
+            event.target.textContent = player
+            let userClass = `${player}-mark`
+            event.target.classList.add(userClass);
+            GameBoard.checkForWinner(userClass);
+        }
+    }
+
+    const moveEnemy = (event) => {
+        if (userTurn == false) {
+            event.target.textContent = player
+            let userClass = `${player}-mark`
+            event.target.classList.add(userClass);
+            GameBoard.checkForWinner(userClass);
+        }
+    }
+
+    gameBoard.forEach((cell) => {
+        cell.addEventListener("click", e => {
+            if (player === "x" && is_user) {
+                moveUser(e);
+                userTurn = false;
+            }
+            else if (player === "x" && !is_user) {
+                moveEnemy(e);
+                userTurn = true;
+            }
+
+        })
+    })
+
 }
 
 
