@@ -35,9 +35,9 @@ const SetGame = (user, enemy, difficulty) => {
     playerInt.textContent = user === "x" ? "Player: X" : "Player: O";
 
     const playerUser = PlayerFactory(user, true, difficulty);
-    const playerEnemy = PlayerFactory(enemy, false, difficulty);
+    const playerEnemy = difficulty === "user" ? PlayerFactory(enemy, true, difficulty) : PlayerFactory(enemy, false, difficulty);
 
-    return {playerUser, playerEnemy};
+    GameLoop(playerUser, playerEnemy);
 }
 
 const GameBoard = (() => {
@@ -64,7 +64,6 @@ const GameBoard = (() => {
 
 const PlayerFactory = (player, is_user, difficulty) => {
     const gameBoard = GameBoard.gameBoard;
-    // let userTurn = true;
 
     const getPlayer = () => player;
     const getIsUser = () => is_user;
@@ -76,43 +75,18 @@ const PlayerFactory = (player, is_user, difficulty) => {
                 e.target.textContent = player;
                 let markClass = `${player}-mark`;
                 e.target.classList.add(markClass);
-                GameBoard.checkForWinner(markClass);
             })
         })
     }
 
     return {getPlayer, getIsUser, getDiff, makeTurn};
+}
 
-    // const moveUser = (event) => {
-    //     if (userTurn == true) {
-    //         event.target.textContent = player
-    //         let userClass = `${player}-mark`
-    //         event.target.classList.add(userClass);
-    //         GameBoard.checkForWinner(userClass);
-    //     }
-    // }
+const GameLoop = (playerObj, enemyObj) => {
+    const user = playerObj;
+    const enemy = enemyObj;
 
-    // const moveEnemy = (event) => {
-    //     if (userTurn == false) {
-    //         event.target.textContent = player
-    //         event.target.classList.add(userClass);
-    //         GameBoard.checkForWinner(userClass);
-    //     }
-    // }
-
-    // gameBoard.forEach((cell) => {
-    //     cell.addEventListener("click", e => {
-    //         if (player === "x" && is_user) {
-    //             moveUser(e);
-    //             userTurn = false;
-    //         }
-    //         else if (player === "x" && !is_user) {
-    //             moveEnemy(e);
-    //             userTurn = true;
-    //         }
-
-    //     })
-    // })
+    console.log(user.getPlayer(), user.getIsUser(), enemy.getPlayer(), enemy.getIsUser());
 }
 
 
