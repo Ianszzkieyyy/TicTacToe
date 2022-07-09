@@ -55,7 +55,11 @@ const GameBoard = (() => {
     ]
 
     const checkForWinner = (class_of_player) => {
-        const playerSelection = Array.from(document.querySelector(`.${class_of_player}`));  
+        return winningBoard.some(combination => {
+            return combination.every(index => {
+                return gameBoard[index].classList.contains(class_of_player)
+            })
+        })
     }
 
     return{checkForWinner, gameBoard}
@@ -63,20 +67,15 @@ const GameBoard = (() => {
 })();
 
 const PlayerFactory = (player, is_user, difficulty) => {
-    const gameBoard = GameBoard.gameBoard;
 
     const getPlayer = () => player;
     const getIsUser = () => is_user;
     const getDiff = () => difficulty;
 
-    const makeTurn = () => {
-        gameBoard.forEach((cell) => {
-            cell.addEventListener("click", e => {
-                e.target.textContent = player;
-                let markClass = `${player}-mark`;
-                e.target.classList.add(markClass);
-            })
-        })
+    const makeTurn = (event) => {
+        event.target.textContent = player;
+        let markClass = `${player}-mark`;
+        event.target.classList.add(markClass);
     }
 
     return {getPlayer, getIsUser, getDiff, makeTurn};
@@ -85,6 +84,27 @@ const PlayerFactory = (player, is_user, difficulty) => {
 const GameLoop = (playerObj, enemyObj) => {
     const user = playerObj;
     const enemy = enemyObj;
+    const gameBoard = GameBoard.gameBoard;
+    const checkWin = GameBoard.checkForWinner;
+
+    let isUserTurn = user.getPlayer() === "x" ? true : false;
+
+    gameBoard.forEach((cell) => {
+        cell.addEventListener("click", e => {
+            if (isUserTurn === true) {
+                console.log("user toggled");
+                user.makeTurn(e);
+                console.log(checkWin(`${user.getPlayer()}-mark`));
+                isUserTurn = false;
+            }
+            else if (isUserTurn === false) {
+                console.log("enemy toggled");
+                enemy.makeTurn(e)
+                console.log(checkWin(`${enemy.getPlayer()}-mark`));
+                isUserTurn = true;
+            }
+        }, {once: true});
+    })
 
     console.log(user.getPlayer(), user.getIsUser(), enemy.getPlayer(), enemy.getIsUser());
 }
