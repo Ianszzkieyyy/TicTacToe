@@ -76,7 +76,11 @@ const GameBoard = (() => {
         })
     }
 
-    return{checkForWinner, gameBoard}
+    const checkForDraw = () => gameBoard.every(cell => {
+        return cell.hasAttribute("class");
+    })
+
+    return{checkForWinner, checkForDraw, gameBoard}
     
 })();
 
@@ -100,7 +104,9 @@ const GameLoop = (playerObj, enemyObj) => {
     let enemy = enemyObj;
 
     const gameBoard = GameBoard.gameBoard;
-    const checkWin = GameBoard.checkForWinner
+    const checkWin = GameBoard.checkForWinner;
+    const checkDraw = GameBoard.checkForDraw;
+    const titleMsg = document.querySelector(".title");
 
     let isUserTurn = user.getPlayer() === "x" ? true : false;
     let isGameWon = false;
@@ -111,19 +117,29 @@ const GameLoop = (playerObj, enemyObj) => {
                 console.log("user toggled");
                 user.makeTurn(e);
                 if (checkWin(`${user.getPlayer()}-mark`)) { SetWinner(user.getPlayer()); isGameWon = true } 
+                if (checkDraw()) SetDraw();
                 isUserTurn = false;
             }
-            else if (isUserTurn === false && !isGameWon) {
+            else if (isUserTurn === false && enemy.getIsUser() && !isGameWon) {
                 console.log("enemy toggled");
                 enemy.makeTurn(e)
                 if (checkWin(`${enemy.getPlayer()}-mark`)) { SetWinner(enemy.getPlayer()); isGameWon = true } 
+                if (checkDraw()) SetDraw();
                 isUserTurn = true;
+            }
+            else if (isUserTurn === false && !enemy.getIsUser() && !isGameWon) {
+                return
             }
         }, {once: true});
     })
 
+
     const SetWinner = (player) => {
-        console.log(`${player} is the winner!`);
+        titleMsg.textContent = (`${player.toUpperCase()} is the winner!`);
+    }
+
+    const SetDraw = () => {
+        titleMsg.textContent = ("We Have a Draw!");
     }
 }
 
