@@ -30,6 +30,7 @@ const InitializeForm = (() => {
     })
 })();
 
+
 const SetGame = (user, enemy, difficulty) => {
     const playerInt = document.querySelector(".player-int");
     playerInt.textContent = user === "x" ? "Player: X" : "Player: O";
@@ -82,31 +83,35 @@ const PlayerFactory = (player, is_user, difficulty) => {
 }
 
 const GameLoop = (playerObj, enemyObj) => {
-    const user = playerObj;
-    const enemy = enemyObj;
+    let user = playerObj;
+    let enemy = enemyObj;
+
     const gameBoard = GameBoard.gameBoard;
-    const checkWin = GameBoard.checkForWinner;
+    const checkWin = GameBoard.checkForWinner
 
     let isUserTurn = user.getPlayer() === "x" ? true : false;
+    let isGameWon = false;
 
     gameBoard.forEach((cell) => {
         cell.addEventListener("click", e => {
-            if (isUserTurn === true) {
+            if (isUserTurn === true && !isGameWon) {
                 console.log("user toggled");
                 user.makeTurn(e);
-                console.log(checkWin(`${user.getPlayer()}-mark`));
+                if (checkWin(`${user.getPlayer()}-mark`)) { SetWinner(user.getPlayer()); isGameWon = true } 
                 isUserTurn = false;
             }
-            else if (isUserTurn === false) {
+            else if (isUserTurn === false && !isGameWon) {
                 console.log("enemy toggled");
                 enemy.makeTurn(e)
-                console.log(checkWin(`${enemy.getPlayer()}-mark`));
+                if (checkWin(`${enemy.getPlayer()}-mark`)) { SetWinner(enemy.getPlayer()); isGameWon = true } 
                 isUserTurn = true;
             }
         }, {once: true});
     })
 
-    console.log(user.getPlayer(), user.getIsUser(), enemy.getPlayer(), enemy.getIsUser());
+    const SetWinner = (player) => {
+        console.log(`${player} is the winner!`);
+    }
 }
 
 
