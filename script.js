@@ -28,7 +28,20 @@ const InitializeForm = (() => {
 
         SetGame(user, enemy, difficulty);
     })
+});
+
+const RestartGame = (() => {
+    const restartBtn = document.querySelector(".restart-btn")
+    restartBtn.addEventListener("click", () => {
+        InitializeForm();
+        GameBoard.gameBoard.forEach(cell => {
+            cell.textContent = "";
+            cell.removeAttribute('class');
+        })
+    });
 })();
+
+InitializeForm();
 
 
 const SetGame = (user, enemy, difficulty) => {
