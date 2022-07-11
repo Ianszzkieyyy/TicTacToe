@@ -124,38 +124,32 @@ const GameLoop = (playerObj, enemyObj) => {
     let isUserTurn = user.getPlayer() === "x" ? true : false;
     let isGameWon = false;
 
-    // const aiMove = () => {
-    //     let checkSpot = GameBoard.checkAvailableSpot();
-    //     let random = Math.floor(Math.random() * checkSpot.length);
-    //     if (enemy.getDiff() === "easy" && isGameWon == false) {
-    //         enemy.aiTurn(checkSpot[random]);
-    //         if (checkWin(`${enemy.getPlayer()}-mark`)) { SetWinner(enemy.getPlayer()); isGameWon = true } 
-    //         isUserTurn = true;
-    //     }
-    // }
-
     gameBoard.forEach((cell) => {
-
         cell.addEventListener("click", e => {
-            if (isUserTurn === true && !isGameWon) {
+            if (isUserTurn === true && !isGameWon && !e.target.hasAttribute("class")) {
                 console.log("user toggled");
                 user.makeTurn(e);
-                if (checkWin(`${user.getPlayer()}-mark`)) { SetWinner(user.getPlayer()); isGameWon = true } 
-                if (checkDraw()) SetDraw();
+                checkWinDraw(user);
                 isUserTurn = false;
+                if (isUserTurn === false && !enemy.getIsUser() && !isGameWon) {
+                    setTimeout(enemy.aiTurn, 2000);
+                    checkWinDraw(enemy);
+                    isUserTurn = true;
+                }
             }
-            else if (isUserTurn === false && enemy.getIsUser() && !isGameWon) {
+            else if (isUserTurn === false && enemy.getIsUser() && !isGameWon && !e.target.hasAttribute("class")) {
                 console.log("enemy toggled");
                 enemy.makeTurn(e)
-                if (checkWin(`${enemy.getPlayer()}-mark`)) { SetWinner(enemy.getPlayer()); isGameWon = true } 
-                if (checkDraw()) SetDraw();
+                checkWinDraw(enemy);
                 isUserTurn = true;
             }
-        }, {once: true});
-        
+        });
     })
 
-    
+    const checkWinDraw = (player) => {
+        if (checkWin(`${player.getPlayer()}-mark`)) { SetWinner(player.getPlayer()); isGameWon = true } 
+        if (checkDraw()) SetDraw();
+    }
 
     const SetWinner = (player) => {
         titleMsg.textContent = (`${player.toUpperCase()} is the winner!`);
