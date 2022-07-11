@@ -32,8 +32,10 @@ const InitializeForm = (() => {
 
 const RestartGame = (() => {
     const restartBtn = document.querySelector(".restart-btn")
+    const titleMsg = document.querySelector(".title");
     restartBtn.addEventListener("click", () => {
         InitializeForm();
+        titleMsg.textContent = "Tic Tac Toe!"
         GameBoard.gameBoard.forEach(cell => {
             cell.textContent = "";
             cell.removeAttribute('class');
@@ -42,7 +44,6 @@ const RestartGame = (() => {
 })();
 
 InitializeForm();
-
 
 const SetGame = (user, enemy, difficulty) => {
     const playerInt = document.querySelector(".player-int");
@@ -80,7 +81,11 @@ const GameBoard = (() => {
         return cell.hasAttribute("class");
     })
 
-    return{checkForWinner, checkForDraw, gameBoard}
+    const checkAvailableSpot = () => gameBoard.filter(cell => {
+        return !cell.hasAttribute("class");
+    });
+
+    return{checkForWinner, checkForDraw, checkAvailableSpot, gameBoard}
     
 })();
 
@@ -90,13 +95,21 @@ const PlayerFactory = (player, is_user, difficulty) => {
     const getIsUser = () => is_user;
     const getDiff = () => difficulty;
 
+    let markClass = `${player}-mark`;
+
     const makeTurn = (event) => {
         event.target.textContent = player;
-        let markClass = `${player}-mark`;
         event.target.classList.add(markClass);
     }
 
-    return {getPlayer, getIsUser, getDiff, makeTurn};
+    const aiTurn = () => {
+        let checkSpot = GameBoard.checkAvailableSpot();
+        let random = Math.floor(Math.random() * checkSpot.length);
+        checkSpot[random].textContent = player
+        checkSpot[random].classList.add(markClass);
+    }
+
+    return {getPlayer, getIsUser, getDiff, makeTurn, aiTurn};
 }
 
 const GameLoop = (playerObj, enemyObj) => {
@@ -111,7 +124,18 @@ const GameLoop = (playerObj, enemyObj) => {
     let isUserTurn = user.getPlayer() === "x" ? true : false;
     let isGameWon = false;
 
+    // const aiMove = () => {
+    //     let checkSpot = GameBoard.checkAvailableSpot();
+    //     let random = Math.floor(Math.random() * checkSpot.length);
+    //     if (enemy.getDiff() === "easy" && isGameWon == false) {
+    //         enemy.aiTurn(checkSpot[random]);
+    //         if (checkWin(`${enemy.getPlayer()}-mark`)) { SetWinner(enemy.getPlayer()); isGameWon = true } 
+    //         isUserTurn = true;
+    //     }
+    // }
+
     gameBoard.forEach((cell) => {
+
         cell.addEventListener("click", e => {
             if (isUserTurn === true && !isGameWon) {
                 console.log("user toggled");
@@ -127,12 +151,11 @@ const GameLoop = (playerObj, enemyObj) => {
                 if (checkDraw()) SetDraw();
                 isUserTurn = true;
             }
-            else if (isUserTurn === false && !enemy.getIsUser() && !isGameWon) {
-                return
-            }
         }, {once: true});
+        
     })
 
+    
 
     const SetWinner = (player) => {
         titleMsg.textContent = (`${player.toUpperCase()} is the winner!`);
