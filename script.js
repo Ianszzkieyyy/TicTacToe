@@ -28,29 +28,22 @@ const InitializeForm = (() => {
 
         SetGame(user, enemy, difficulty);
     })
-});
-
-const RestartGame = (() => {
-    const restartBtn = document.querySelector(".restart-btn")
-    const titleMsg = document.querySelector(".title");
-    restartBtn.addEventListener("click", () => {
-        InitializeForm();
-        titleMsg.textContent = "Tic Tac Toe!"
-        GameBoard.gameBoard.forEach(cell => {
-            cell.textContent = "";
-            cell.removeAttribute('class');
-        })
-    });
 })();
 
-InitializeForm();
+const RestartGame = (() => {
+
+    const restartBtn = document.querySelector(".restart-btn")
+    restartBtn.addEventListener("click", () => {
+        location.reload();
+    })
+})();
 
 const SetGame = (user, enemy, difficulty) => {
     const playerInt = document.querySelector(".player-int");
     playerInt.textContent = user === "x" ? "Player: X" : "Player: O";
 
-    const playerUser = PlayerFactory(user, true, difficulty);
-    const playerEnemy = difficulty === "user" ? PlayerFactory(enemy, true, difficulty) : PlayerFactory(enemy, false, difficulty);
+    let playerUser = PlayerFactory(user, true, difficulty);
+    let playerEnemy = difficulty === "user" ? PlayerFactory(enemy, true, difficulty) : PlayerFactory(enemy, false, difficulty);
 
     GameLoop(playerUser, playerEnemy);
 }
@@ -64,7 +57,7 @@ const GameBoard = (() => {
         [6,7,8],
         [0,3,6],
         [1,4,7],
-        [2,5,8],
+        [2,5,8],                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
         [0,4,8],
         [2,4,6],
     ]
@@ -123,28 +116,15 @@ const GameLoop = (playerObj, enemyObj) => {
 
     let isUserTurn = user.getPlayer() === "x" ? true : false;
     let isGameWon = false;
+    let isFirstTurnDone = false; 
 
-    gameBoard.forEach((cell) => {
-        cell.addEventListener("click", e => {
-            if (isUserTurn === true && !isGameWon && !e.target.hasAttribute("class")) {
-                console.log("user toggled");
-                user.makeTurn(e);
-                checkWinDraw(user);
-                isUserTurn = false;
-                if (isUserTurn === false && !enemy.getIsUser() && !isGameWon) {
-                    setTimeout(enemy.aiTurn, 2000);
-                    checkWinDraw(enemy);
-                    isUserTurn = true;
-                }
-            }
-            else if (isUserTurn === false && enemy.getIsUser() && !isGameWon && !e.target.hasAttribute("class")) {
-                console.log("enemy toggled");
-                enemy.makeTurn(e)
-                checkWinDraw(enemy);
-                isUserTurn = true;
-            }
-        });
-    })
+    const AIFirstTurn = () => {
+        setTimeout(() => {
+            enemy.aiTurn();
+            checkWinDraw(enemy);
+            isUserTurn = true;
+        }, 2000);
+    }
 
     const checkWinDraw = (player) => {
         if (checkWin(`${player.getPlayer()}-mark`)) { SetWinner(player.getPlayer()); isGameWon = true } 
@@ -158,6 +138,35 @@ const GameLoop = (playerObj, enemyObj) => {
     const SetDraw = () => {
         titleMsg.textContent = ("We Have a Draw!");
     }
+
+
+    gameBoard.forEach((cell) => {
+        if (isUserTurn === false && !enemy.getIsUser() && !isFirstTurnDone) { AIFirstTurn(); isFirstTurnDone = true; } 
+        cell.addEventListener("click", e => {
+            if (isUserTurn === true && !isGameWon && !e.target.hasAttribute("class")) {
+                console.log("user toggled");
+                user.makeTurn(e);
+                checkWinDraw(user);
+                isUserTurn = false;
+                if (isUserTurn === false && !enemy.getIsUser() && !isGameWon) {
+                    setTimeout(() => {
+                        enemy.aiTurn();
+                        checkWinDraw(enemy);
+                        isUserTurn = true;
+                    }, 2000);
+                    
+                }
+            }
+            else if (isUserTurn === false && enemy.getIsUser() && !isGameWon && !e.target.hasAttribute("class")) {
+                console.log("enemy toggled");
+                enemy.makeTurn(e)
+                checkWinDraw(enemy);
+                isUserTurn = true;
+            }
+        });
+    });
+
+    
 }
 
 
